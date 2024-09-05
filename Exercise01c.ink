@@ -107,13 +107,15 @@ Several guards are revealed in and around the great mead hall, and your arms are
 -> END
 
 == alley ==
-//conditional here; don't show text if in combat
+{not fight && not run && not reason2:
 {weapon} at the ready, you slowly creep towards the source of distress. The utterances cease, and you whip your head around to observe your surroundings. Out of the corner of your eye, under the thin dusting of snow, you catch a patch of discoloration. Where the cold hard dirt should be, there is instead a crimson coating of blood. 
+} {not fight && not run && not reason2:
 You whip your head around in alarm, and are thrown off by the presence of another person approaching behind you. You're thrown off just enought you stumble backwards, narrowly missing a concealed blade coming in contact with your neck. You draw {helm: your old hatchet| {weapon}} and prepare for a fight. 
-
+}
 + Take a swing. This brigand doesn't know who they're challenging. -> fight
 + Make a run for it. You don't want to hurt yourself on such an important job. -> run
-+ Stake your claim. Surely they can see reason and leave you be. -> reason
+* {helm} Stake your claim. Surely they can see reason and leave you be. -> reason1
++ {not helm} Stake your claim. Surely they can see reason and leave you be. -> reason2
 -> END
 
 == fight ==
@@ -162,22 +164,30 @@ Health: {health}
 -> alley
 -> END
 
-== reason ==
-{helm:
+== reason1 ==
 The figure raises their sword and begins to rush you. You stand your ground, and call out to them.
 "Enough. Who are you who thinks you have any business attacking me. I'm on official business of Count Vedillan, and he is not the kind of man with which you want any quarry. Move along or I cannot guarantee your safety."
 Your voice resonates within the silver helm enclosing your head, and projects itself in a booming, steely manner. The bandit stops dead in his tracks, lowers his sword, and removes his face covering.
-"I was told this was quick easy money. Take the job, get in with the Count, take the reward. But if this is the person being sent to do his business, I'm afraid I'm out of my depth on this one."
-}
-+ {helm} ["I'd recommend making yourself scarce, and finding yourself another occupation. Not everyone will be as understanding as me."] -> spare
-+ {helm} ["I'm afraid you are. Consider this your retirement."] -> kill
+"I was told this was quick easy money. Take the job, get in with the Count, take the reward. But if this is the one being sent to do his business, I'm afraid I'm out of my depth on this one."
++ ["I'd recommend making yourself scarce, and finding yourself another occupation. Not everyone will be as understanding as me."] -> spare
++ ["I'm afraid you are. Consider this your retirement."] -> kill
+-> END
 
+== reason2 ==
+{reason2 > 1:
+"I've just met with the man, so believe me when I say this won't go in your favor." The bandit stops dead in his tracks, lowers his sword, and removes his face covering.
+"I was told this'd be quick easy money. But I suppose he's fought in a war, and King Eaven stabbed him in the back once. Don't need to give him someone else to take it out on."
+}
+{reason2 ==1: 
 "I'm on a contract from Count Vedillan himself. Hurt me and you'll be making an enemy in a very high place."
 "I know all about your little chore. Hand over what he gave you and I'll take care of it." He flicks his sword, leaving a gash in your thigh. "Next time I'll go a bit deeper."
 ~ health --
+}
 Health: {health}
-
 {health == 0: -> death}
+{reason2 == 1: -> alley}
++ {reason2 > 1}["I'd recommend making yourself scarce, and finding yourself another occupation. Not everyone will be as understanding as me."] -> spare
++ {reason2 > 1} ["I'm afraid you are. Consider this your retirement."] -> kill
 -> END
 
 == spare ==
